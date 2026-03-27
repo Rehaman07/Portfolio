@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portfolio | B.Tech & Design{% endblock %}</title>
+    <meta name="description" content="Portfolio of a B.Tech student, Graphic Designer, and Software Engineer.">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <div id="tsparticles"></div>
+    <nav class="glass">
+        <div class="logo">rehaman<span> shaik</span></div>
+        <div class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'portfolio' %}">Portfolio</a>
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        </div>
+    </nav>
+    <main class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2026 Portfolio. Crafted with passion by an Aspiring Software Engineer & Designer.</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.15,
+            scale: 1.05
+        });
+
+        tsParticles.load("tsparticles", {
+            fullScreen: { enable: true, zIndex: -1 },
+            detectRetina: true,
+            interactivity: {
+                detectsOn: "window",
+                events: {
+                    onHover: { enable: true, mode: "repel" },
+                    resize: true
+                },
+                modes: {
+                    repel: { distance: 150, duration: 0.4 }
+                }
+            },
+            particles: {
+                number: { value: 120, density: { enable: true, area: 800 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: { min: 0.2, max: 0.8 } },
+                size: { value: { min: 1, max: 3 } },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    outModes: "out"
+                }
+            }
+        });
+    </script>
+    <!-- Global Image Viewer Modal -->
+    <div class="image-viewer-modal" id="globalImageViewer">
+        <button class="image-viewer-close" onclick="closeImageViewer(event)">&times;</button>
+        <img src="" id="globalImageViewerImg" alt="Full Size Project Image">
+    </div>
+
+    <script>
+        function openImageViewer(url, event) {
+            if (event) event.stopPropagation();
+            const viewer = document.getElementById('globalImageViewer');
+            const img = document.getElementById('globalImageViewerImg');
+            img.src = url;
+            viewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageViewer(event) {
+            if (event) event.stopPropagation();
+            const viewer = document.getElementById('globalImageViewer');
+            viewer.classList.remove('active');
+            // if we are closing image viewer, we check if there are other open modals
+            const activeModal = document.querySelector('.floating-modal.active');
+            if (!activeModal) {
+                document.body.style.overflow = 'auto';
+            }
+        }
+    </script>
+</body>
+
+</html>

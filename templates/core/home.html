@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Home | Portfolio{% endblock %}
+{% block content %}
+<section class="hero animate-up" style="text-align: center; margin-top: 50px;">
+    <h1 style="font-size: 4rem;">Hi, I'm <span class="gradient-text"> Rehaman </span></h1>
+    <p style="font-size: 1.5rem; color: var(--text-muted);">B.Tech CSE Student | Graphic Designer | Software
+        Engineer</p>
+    <div style="margin-top: 40px;">
+        <a href="{% url 'portfolio' %}" class="btn">View My Work</a>
+        <a href="{% url 'contact' %}" class="btn"
+            style="background: transparent; border: 2px solid var(--accent-1); color: var(--accent-1); margin-left: 20px; box-shadow: none;">Contact
+            Me</a>
+    </div>
+</section>
+
+<section class="recent-projects" style="margin-top: 100px;">
+    <h2>Featured Work</h2>
+    <div class="floating-boxes-container">
+        {% for project in projects %}
+        <div class="floating-box" onclick="openModal('home-modal-{{ forloop.counter }}')">
+            {% if project.image %}
+            <img src="{{ project.image.url }}" alt="{{ project.title }}">
+            {% else %}
+            <div style="font-size: 2rem; color: var(--accent-1); font-weight: 800;">{{ project.title|first }}</div>
+            {% endif %}
+            <div class="floating-box-title">{{ project.title|truncatechars:12 }}</div>
+        </div>
+
+        <!-- Modal Base -->
+        <div class="floating-modal" id="home-modal-{{ forloop.counter }}">
+            <button class="floating-modal-close"
+                onclick="closeModal('home-modal-{{ forloop.counter }}', event)">&times;</button>
+            <div class="floating-modal-content">
+                <div class="modal-flip-inner" onclick="this.classList.toggle('flipped')">
+                    <!-- Front Side -->
+                    <div class="modal-front glass">
+                        {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                            onclick="openImageViewer('{{ project.image.url }}', event)">
+                        {% else %}
+                        <div
+                            style="width: 100%; height: 150px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+                            <span style="color: var(--text-muted); font-size: 1.2rem; font-weight: bold;">{{
+                                project.category }}</span>
+                        </div>
+                        {% endif %}
+                        <h3 style="text-align: center; font-size: 1.4rem; margin-top: 10px;">{{ project.title }}</h3>
+                        <div style="text-align: center; margin-top: auto;">
+                            <span
+                                style="display: inline-block; padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.9rem; color: var(--accent-1); transform: translateZ(20px);">Click
+                                to Flip</span>
+                        </div>
+                    </div>
+
+                    <!-- Back Side -->
+                    <div class="modal-back glass">
+                        <div style="width: 100%;">
+                            <h3
+                                style="margin-bottom: 10px; font-size: 1.6rem; font-weight: 800; transform: translateZ(40px);">
+                                {{ project.title }}</h3>
+                            <p
+                                style="color: var(--accent-1); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 20px; font-size: 0.85rem; transform: translateZ(30px);">
+                                {{ project.category }}</p>
+                            <p
+                                style="color: var(--text-muted); line-height: 1.7; margin-bottom: 30px; transform: translateZ(20px);">
+                                {{ project.description|truncatewords:15 }}</p>
+                            {% if project.project_url %}
+                            <div style="transform: translateZ(50px);">
+                                <a href="{{ project.project_url }}" target="_blank" class="btn"
+                                    onclick="event.stopPropagation()"
+                                    style="padding: 10px 24px; font-size: 0.95rem; width: 100%; border-radius: 12px;">View
+                                    Project</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-muted); width: 100%; font-size: 1.2rem;">New projects coming
+            soon...</p>
+        {% endfor %}
+    </div>
+
+    <script>
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id, event) {
+            if (event) event.stopPropagation();
+            const modal = document.getElementById(id);
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                const flipper = modal.querySelector('.modal-flip-inner');
+                if (flipper) flipper.classList.remove('flipped');
+            }, 400);
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('floating-modal')) {
+                closeModal(e.target.id);
+            }
+        });
+    </script>
+</section>
+{% endblock %}

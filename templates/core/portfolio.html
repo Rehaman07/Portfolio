@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Portfolio | My Work{% endblock %}
+{% block content %}
+<h1 class="gradient-text animate-up" style="text-align: center;">My Portfolio</h1>
+<p class="animate-up" style="text-align: center; color: var(--text-muted); margin-bottom: 40px;">A collection of my graphic design and software engineering projects.</p>
+
+<div class="floating-boxes-container">
+    {% for project in projects %}
+    <div class="floating-box" onclick="openModal('modal-{{ forloop.counter }}')">
+        {% if project.image %}
+        <img src="{{ project.image.url }}" alt="{{ project.title }}">
+        {% else %}
+        <div style="font-size: 2rem; color: var(--accent-1); font-weight: 800;">{{ project.title|first }}</div>
+        {% endif %}
+        <div class="floating-box-title">{{ project.title|truncatechars:12 }}</div>
+    </div>
+
+    <!-- Modal Base -->
+    <div class="floating-modal" id="modal-{{ forloop.counter }}">
+        <button class="floating-modal-close" onclick="closeModal('modal-{{ forloop.counter }}', event)">&times;</button>
+        <div class="floating-modal-content">
+            <div class="modal-flip-inner" onclick="this.classList.toggle('flipped')">
+                <!-- Front Side -->
+                <div class="modal-front glass">
+                    {% if project.image %}
+                    <img src="{{ project.image.url }}" alt="{{ project.title }}" onclick="openImageViewer('{{ project.image.url }}', event)">
+                    {% else %}
+                    <div style="width: 100%; height: 150px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: var(--text-muted); font-size: 1.2rem; font-weight: bold;">{{ project.category }}</span>
+                    </div>
+                    {% endif %}
+                    <h3 style="text-align: center; font-size: 1.4rem; margin-top: 10px;">{{ project.title }}</h3>
+                    <div style="text-align: center; margin-top: auto;">
+                        <span style="display: inline-block; padding: 8px 20px; background: rgba(255,255,255,0.1); border-radius: 30px; border: 1px solid var(--glass-border); font-size: 0.9rem; color: var(--accent-1); transform: translateZ(20px);">Click to Flip</span>
+                    </div>
+                </div>
+
+                <!-- Back Side -->
+                <div class="modal-back glass">
+                    <div style="width: 100%;">
+                        <h3 style="margin-bottom: 10px; font-size: 1.6rem; font-weight: 800; transform: translateZ(40px);">{{ project.title }}</h3>
+                        <p style="color: var(--accent-1); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 20px; font-size: 0.85rem; transform: translateZ(30px);">{{ project.category }}</p>
+                        <p style="color: var(--text-muted); line-height: 1.7; margin-bottom: 30px; transform: translateZ(20px);">{{ project.description }}</p>
+                        {% if project.project_url %}
+                        <div style="transform: translateZ(50px);">
+                            <a href="{{ project.project_url }}" target="_blank" class="btn" onclick="event.stopPropagation()" style="padding: 10px 24px; font-size: 0.95rem; width: 100%; border-radius: 12px;">View Project</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p style="text-align: center; color: var(--text-muted); width: 100%; font-size: 1.2rem;">No projects added yet.</p>
+    {% endfor %}
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal(id, event) {
+        if (event) event.stopPropagation();
+        const modal = document.getElementById(id);
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        setTimeout(() => {
+            const flipper = modal.querySelector('.modal-flip-inner');
+            if (flipper) flipper.classList.remove('flipped');
+        }, 400); // Wait for modal fade out
+    }
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('floating-modal')) {
+            closeModal(e.target.id);
+        }
+    });
+</script>
+{% endblock %}

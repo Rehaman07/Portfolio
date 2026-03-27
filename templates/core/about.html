@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}About | Student & Creator{% endblock %}
+{% block content %}
+<div class="about-section animate-up" style="max-width: 800px; margin: 0 auto;">
+    <h1 class="gradient-text" style="text-align: center;">About Me</h1>
+    <div class="glass" style="padding: 40px; margin-top: 30px;">
+        <p style="font-size: 1.1rem; margin-bottom: 20px;">
+            I am currently pursuing my B.Tech degree, with a deep passion for bridging aesthetics and logic. As both a freelance graphic designer and an aspiring software engineer, I enjoy building software that not only functions flawlessly but also looks stunning.
+        </p>
+        <p style="font-size: 1.1rem; margin-bottom: 40px;">
+            My unique dual-focus allows me to approach problems creatively while implementing scalable technical solutions.
+        </p>
+        
+        <h2 style="font-size: 1.8rem; margin-bottom: 20px; text-align: left;">My Skills</h2>
+        <div class="skills-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <h3 style="color: var(--accent-1); margin-bottom: 15px; font-size: 1.3rem;">Design</h3>
+                {% for skill in skills %}
+                    {% if skill.category == 'Design' %}
+                    <div style="margin-bottom: 15px;">
+                        <span style="display: block; font-weight: 600; margin-bottom: 5px;">{{ skill.name }}</span>
+                        <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px;">
+                            <div style="width: {{ skill.proficiency_percentage }}%; background: var(--accent-1); height: 100%; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% if not skills %}
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Skills will appear here...</p>
+                {% endif %}
+            </div>
+            <div>
+                <h3 style="color: var(--accent-2); margin-bottom: 15px; font-size: 1.3rem;">Engineering</h3>
+                {% for skill in skills %}
+                    {% if skill.category == 'Software' %}
+                    <div style="margin-bottom: 15px;">
+                        <span style="display: block; font-weight: 600; margin-bottom: 5px;">{{ skill.name }}</span>
+                        <div style="width: 100%; background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px;">
+                            <div style="width: {{ skill.proficiency_percentage }}%; background: var(--accent-2); height: 100%; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                {% if not skills %}
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Skills will appear here...</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
